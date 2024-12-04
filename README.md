@@ -84,6 +84,8 @@ Bash
 mvn allure:serve
 Use o código com cuidado.
 
+![img.png](img.png)
+
 ### **Test Runner**
 
 Para executar um teste de cada vez, você precisará executar pelo Cucumber na IDE.
