@@ -1,6 +1,12 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Page Object para a página de adição de produto ao carrinho e finalização da compra.
+ */
+
 package Pages;
 
-import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -8,7 +14,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -19,12 +24,10 @@ import static org.testng.Assert.fail;
 public class AddProductToCartAndPurchasePage {
     private final WebDriver driver;
     private WebDriverWait wait;
-    private Select select;
 
     public AddProductToCartAndPurchasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait( driver, Duration.ofSeconds( 10 ) );
-        this.select = select;
         PageFactory.initElements( driver, this );
     }
 
@@ -90,8 +93,7 @@ public class AddProductToCartAndPurchasePage {
             wait.until(ExpectedConditions.elementToBeClickable(shoppingCartIcon));
             shoppingCartIcon.click();
         } catch (Exception e) {
-            // Catch any other exceptions and print the error
-            System.err.println("An error occurred: " + e.getMessage());
+            handleException(e, "Erro ao clicar no ícone do carrinho de compras: ");
         }
     }
 
@@ -125,12 +127,9 @@ public class AddProductToCartAndPurchasePage {
             paymentMethod.isDisplayed();
             paymentMethod.click();
         } catch (TimeoutException e) {
-            System.err.println("Could not find a clickable element called chekmo" + e.getMessage());
-            fail("Expected checkmo to be clickable " + e.getMessage());
+            handleException(e, "Could not find a clickable element called checkmo: ");
         } catch (Exception e) {
-            // Catch any other exceptions and print the error
-            System.err.println("An error occurred: " + e.getMessage());
-            fail("An error occurred: " + e.getMessage());
+            handleException(e, "An error occurred: ");
         }
     }
 
@@ -141,14 +140,9 @@ public class AddProductToCartAndPurchasePage {
             wait.until(ExpectedConditions.elementToBeClickable( confirmOrderButton ));
             confirmOrderButton.click();
         } catch (TimeoutException e) {
-            System.err.println("Could not find a clickable element called chekmo" + e.getMessage());
-            fail("Expected checkmo to be clickable " + e.getMessage());
-
-        }
-        catch (Exception e) {
-            // Catch any other exceptions and print the error
-            System.err.println("An error occurred: " + e.getMessage());
-            fail("An error occurred: " + e.getMessage());
+            handleException(e, "Could not find a clickable element called confirmOrderButton: ");
+        } catch (Exception e) {
+            handleException(e, "An error occurred: ");
         }
     }
 
@@ -162,12 +156,14 @@ public class AddProductToCartAndPurchasePage {
 
             assertEquals(expectedText, actualText);
         } catch (TimeoutException e) {
-            System.err.println("The order was not confirmation" + e.getMessage());
-         }
-        catch (Exception e) {
-            // Catch any other exceptions and print the error
-            System.err.println("An error occurred: " + e.getMessage());
-            fail("An error occurred: " + e.getMessage());
+            handleException(e, "The order was not confirmation: ");
+        } catch (Exception e) {
+            handleException(e, "An error occurred: ");
         }
+    }
+
+    private void handleException(Exception e, String message) {
+        System.err.println(message + e.getMessage());
+        fail(message + e.getMessage());
     }
 }

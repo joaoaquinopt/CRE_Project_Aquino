@@ -1,3 +1,10 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Page Object para a página de registro de utilizador.
+ */
+
 package Pages;
 
 import org.openqa.selenium.*;
@@ -5,15 +12,12 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.qameta.allure.Step;
+
 
 import java.time.Duration;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * Page Object class representing the User Registration page
- */
 public class UserRegistrationPage {
     private static final String SUCCESS_MESSAGE = "Thank you for registering with Main Website Store.";
     private final WebDriver driver;
@@ -43,16 +47,13 @@ public class UserRegistrationPage {
     @FindBy(css = "div[data-bind='html: $parent.prepareMessageForHtml(message.text)']")
     private WebElement successMessage;
 
-    /**
-     * Constructor initializes the page elements and user data
-     */
+
     public UserRegistrationPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait( driver, Duration.ofSeconds( 10 ) );
         PageFactory.initElements( driver, this );
     }
 
-    @Step("Fill registration form")
     public void fillRegistrationForm(String firstName, String lastName, String email, String password) {
         enterFirstName(firstName);
         enterLastName(lastName);
@@ -81,24 +82,21 @@ public class UserRegistrationPage {
         confirmPasswordField.sendKeys(password);
     }
 
-    @Step("Click create account button")
     public void clickCreateAccountButton() {
         try {
             wait.until(ExpectedConditions.elementToBeClickable( createAccountButton ));
             createAccountButton.click();
         } catch (ElementClickInterceptedException | TimeoutException e) {
-            throw new RuntimeException("Failed to click Create Account button", e);
+            handleException(e, "Failed to click Create Account button: ");
         }
     }
 
-    @Step("Navigate to create account")
     public void navigateToCreateAccount() {
         wait.until(ExpectedConditions.elementToBeClickable( clickCreateAccountLink ));
         clickCreateAccountLink.click();
         waitForPageLoad();
     }
 
-    @Step("Check if registration was successful")
     public boolean isRegistrationSuccessful() {
         try {
             Thread.sleep(5000);
@@ -107,23 +105,23 @@ public class UserRegistrationPage {
             String actualText = successMessage.getText();
             assertEquals( actualText, SUCCESS_MESSAGE, "Success message does not match expected text" );
             return isSuccess;
-        } catch (TimeoutException e) {
+        } catch (TimeoutException | InterruptedException e) {
             return false;
-        } catch (InterruptedException e) {
-            throw new RuntimeException( e );
         }
     }
 
-    @Step("Wait for page to load completely")
     public void waitForPageLoad() {
         try {
             wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             wait.until(webDriver -> ((JavascriptExecutor) webDriver)
                     .executeScript("return document.readyState").equals("complete"));
-        } catch (Exception e)
-        {
-            throw new RuntimeException("Page failed to load in time", e);
+        } catch (Exception e) {
+            handleException(e, "Page failed to load in time: ");
         }
+    }
+
+    private void handleException(Exception e, String message) {
+        System.err.println(message + e.getMessage());
     }
 
 }

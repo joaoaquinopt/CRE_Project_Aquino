@@ -1,11 +1,15 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Classe utilitária para gerar dados de teste.
+ */
+
 package Utils;
 
 import java.util.Random;
 import java.util.UUID;
 
-/**
- * Utility class for generating test data
- */
 public class TestDataGenerator {
 
     public static String generateRandomEmail() {

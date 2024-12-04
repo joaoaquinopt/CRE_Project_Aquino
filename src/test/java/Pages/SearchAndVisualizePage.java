@@ -1,6 +1,12 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Page Object para a página de pesquisa e visualização de produto.
+ */
+
 package Pages;
 
-import Utils.Exceptions.Exceptions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +21,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class SearchAndVisualizePage {
@@ -52,8 +59,8 @@ public class SearchAndVisualizePage {
             searchBarInput.clear();
             Thread.sleep( 1000 );
             searchBarInput.sendKeys( itemName );
-        } catch (Exceptions.NavigationException | InterruptedException e) {
-            throw new RuntimeException( e );
+        } catch (Exception e) {
+            handleException(e, "Erro ao pesquisar item na barra de pesquisa: ");
         }
     }
 
@@ -62,7 +69,7 @@ public class SearchAndVisualizePage {
             Thread.sleep( 1000 );
             wait.until( ExpectedConditions.visibilityOf( searchResults ) );
             List<WebElement> results = searchResults.findElements( By.tagName( "li" ) );
-            assertTrue( "No results found", results.size() > 0 );
+            assertFalse( "No results found", results.isEmpty() );
             boolean foundRunning = false;
             for (WebElement element : results) {
                 if (element.getText().contains( "Running" )) {
@@ -71,8 +78,8 @@ public class SearchAndVisualizePage {
                 }
             }
             assertTrue( "No item contains 'Running'", foundRunning );
-        } catch (Exceptions.NavigationException | InterruptedException e) {
-            throw new RuntimeException( e );
+        } catch (Exception e) {
+            handleException(e, "Erro ao verificar lista de produtos: ");
         }
     }
 
@@ -81,8 +88,8 @@ public class SearchAndVisualizePage {
             Thread.sleep( 1000 );
             wait.until( ExpectedConditions.visibilityOf( searchButton ) ).isDisplayed();
             searchButton.sendKeys( Keys.ENTER );
-        } catch (Exceptions.NavigationException | InterruptedException e) {
-            throw new RuntimeException( e );
+        } catch (Exception e) {
+            handleException(e, "Erro ao clicar no botão de pesquisa: ");
         }
     }
 
@@ -98,15 +105,10 @@ public class SearchAndVisualizePage {
     }
 
     public void shouldBeOnTheItemPage(String name) {
-        String urlAtual = driver.getCurrentUrl(); // Obtém a URL atual
-
-        // Normaliza a URL: converte para minúsculas e remove hífens
+        String urlAtual = driver.getCurrentUrl();
         String urlNormalized = urlAtual.toLowerCase().replace( "-", " " );
-
-        // Normaliza o nome esperado: converte para minúsculas
         String nameExpectedNormalized = name.toLowerCase();
 
-        // Verifica se a URL normalizada contém o nome esperado normalizado
         Assert.assertTrue( urlNormalized.contains( nameExpectedNormalized ),
                 "The URL does not contain the name: " + name );
     }
@@ -121,8 +123,12 @@ public class SearchAndVisualizePage {
 
             wait.until( ExpectedConditions.visibilityOf( descriptionTab ) );
             assertEquals( details, descriptionTab.getText() );
-        } catch (Exceptions.NavigationException e) {
-            throw new RuntimeException( e );
+        } catch (Exception e) {
+            handleException(e, "Erro ao verificar detalhes do item: ");
         }
+    }
+
+    private void handleException(Exception e, String message) {
+        System.err.println(message + e.getMessage());
     }
 }

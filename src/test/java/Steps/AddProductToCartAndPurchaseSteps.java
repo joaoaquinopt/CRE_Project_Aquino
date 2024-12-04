@@ -1,3 +1,10 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Classe de passos para adicionar um produto ao carrinho e finalizar a compra.
+ */
+
 package Steps;
 
 import BrowserConfig.BrowserConfig;
@@ -8,20 +15,17 @@ import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
-
+@Epic("User Add Item to Shopping Cart and Purchase the product")
+@Feature("User Add Item to Shopping Cart and Purchase the product")
 public class AddProductToCartAndPurchaseSteps {
-    private static final Logger log = LoggerFactory.getLogger( AddProductToCartAndPurchaseSteps.class );
     private LoginPage loginPage;
     private AddProductToCartAndPurchasePage addProductToCartAndPurchasePage;
     private WebDriver driver;
-    private WebDriverWait wait;
 
     @Before
     public void setUp(Scenario scenario) {
@@ -33,7 +37,6 @@ public class AddProductToCartAndPurchaseSteps {
         }
         driver = BrowserConfig.getDriver();
         if (driver != null) {
-            wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             loginPage = new LoginPage(driver);
             addProductToCartAndPurchasePage = new AddProductToCartAndPurchasePage(driver);
         } else {

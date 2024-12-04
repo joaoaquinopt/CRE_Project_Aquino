@@ -39,14 +39,14 @@ public class BrowserConfig {
     private static WebDriver createDriver(BrowserType browserType) {
         return switch (browserType) {
             case CHROME -> {
-//                ChromeOptions options = new ChromeOptions();
-//                options.addArguments("--headless=new");
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--headless=new");
                 WebDriverManager.chromedriver().setup();
                 yield new ChromeDriver();
             }
             case FIREFOX -> {
-//                FirefoxOptions options = new FirefoxOptions();
-//                options.addArguments("--headless");
+                FirefoxOptions options = new FirefoxOptions();
+                options.addArguments("--headless");
                 WebDriverManager.firefoxdriver().setup();
                 yield new FirefoxDriver();
             }

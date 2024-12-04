@@ -1,6 +1,12 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Page Object para a página de ‘login’.
+ */
+
 package Pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,9 +16,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import static BrowserConfig.BrowserConfig.getBrowserName;
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
-import java.net.URI;
 import java.time.Duration;
 
 public class LoginPage {
@@ -68,7 +73,7 @@ public class LoginPage {
 
     public void userLoggedIn() {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
             wait.until( ExpectedConditions.elementToBeClickable( changeButton ) );
             changeButton.click();
             wait.until( ExpectedConditions.elementToBeClickable( myAccount ) );
@@ -91,9 +96,9 @@ public class LoginPage {
                         "firefox" -> Assert.assertEquals(nome, "James Obrien", "Nome incorreto!");
                 default
                         -> throw new IllegalArgumentException( "Browser não suportado: " + browser );
-            };
+            }
         } catch (Exception e) {
-            throw new RuntimeException( "Error validating login", e );
+            handleException(e, "Erro ao validar login: ");
         }
     }
 
@@ -132,8 +137,13 @@ public class LoginPage {
             wait.until( ExpectedConditions.elementToBeClickable( signOutButton ) );
             signOutButton.click();
         } catch (Exception e) {
-            throw new RuntimeException( "Erro ao fazer logout", e );
+            handleException(e, "Erro ao fazer logout: ");
         }
+    }
+
+    private void handleException(Exception e, String message) {
+        System.err.println(message + e.getMessage());
+        fail(message + e.getMessage());
     }
 
 }

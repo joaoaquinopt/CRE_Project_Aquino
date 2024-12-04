@@ -1,3 +1,10 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Classe TestRunner para executar os testes do Cucumber.
+ */
+
 package TestRunner;
 
 import io.cucumber.testng.AbstractTestNGCucumberTests;

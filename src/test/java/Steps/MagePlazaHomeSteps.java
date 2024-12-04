@@ -1,3 +1,9 @@
+/*
+ * Autor: João Aquino
+ * Data de Criação: 2024-12-04
+ * Versão: 1.0.0
+ * Descrição: Classe de passos para a navegação na página inicial da MagePlaza.
+ */
 package Steps;
 
 import BrowserConfig.*;
@@ -11,9 +17,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.stream.Collectors;
 
 @Epic("MagePlaza")
@@ -21,7 +25,6 @@ import java.util.stream.Collectors;
 public class MagePlazaHomeSteps {
     private MagePlazaHomePage magePlazaHomePage;
     private WebDriver driver;
-    private WebDriverWait wait;
 
 
     @Before
@@ -33,7 +36,6 @@ public class MagePlazaHomeSteps {
         }
         driver = BrowserConfig.getDriver();
         if (driver != null) {
-            wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             magePlazaHomePage = new MagePlazaHomePage(driver);
         } else {
             throw new IllegalStateException("WebDriver not initialized properly");
@@ -47,16 +49,13 @@ public class MagePlazaHomeSteps {
                 final byte[] screenshot = ((TakesScreenshot) driver)
                         .getScreenshotAs(OutputType.BYTES);
                 scenario.attach(screenshot, "image/png", "Screenshot on failure");
-                // Add page source
                 String pageSource = driver.getPageSource();
                 scenario.attach(pageSource.getBytes(), "text/html", "Page source on failure");
-                // Add browser logs if available
                 if (driver instanceof ChromeDriver) {
-                    String logs = String.join("\n",
-                            driver.manage().logs().get( LogType.BROWSER).getAll()
-                                    .stream()
-                                    .map( LogEntry::toString)
-                                    .collect( Collectors.toList()));
+                    String logs = driver.manage().logs().get( LogType.BROWSER).getAll()
+                            .stream()
+                            .map( LogEntry::toString)
+                            .collect( Collectors.joining( "\n" ) );
                     scenario.attach(logs.getBytes(), "text/plain", "Browser logs");
                 }
             } catch (Exception e) {
@@ -67,9 +66,6 @@ public class MagePlazaHomeSteps {
     }
 
     @Given("I am on the homepage")
-    @Step("I am on the homepage of MagePlaza WebPage")
-    @Description("Verify that I am on the homepage of MagePlaza WebPage successful")
-    @Severity(SeverityLevel.CRITICAL)
     public void iAmOnHomePage() {
         magePlazaHomePage.navigateAndVerifyHomePage();
     }
