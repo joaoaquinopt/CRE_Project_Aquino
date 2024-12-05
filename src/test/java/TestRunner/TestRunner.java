@@ -20,6 +20,9 @@ import org.testng.annotations.DataProvider;
                 "json:target/cucumber-reports/CucumberTestReport.json",
         }
 )
+
+//Para correr os testes em paralelo: Alterar o @DataProvider(parallel = true)
+        
 public class TestRunner extends AbstractTestNGCucumberTests {
         @Override
         @DataProvider(parallel = false)
