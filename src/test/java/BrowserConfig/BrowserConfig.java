@@ -42,13 +42,13 @@ public class BrowserConfig {
                 ChromeOptions options = new ChromeOptions();
                 options.addArguments("--headless=new");
                 WebDriverManager.chromedriver().setup();
-                yield new ChromeDriver();
+                yield new ChromeDriver(options);
             }
             case FIREFOX -> {
                 FirefoxOptions options = new FirefoxOptions();
                 options.addArguments("--headless");
                 WebDriverManager.firefoxdriver().setup();
-                yield new FirefoxDriver();
+                yield new FirefoxDriver(options);
             }
         };
     }
